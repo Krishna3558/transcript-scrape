@@ -6,12 +6,23 @@ require('dotenv').config();
 
 // Initialize the Express app
 const app = express();
-const port = process.env.PORT || 3000; // You can change this port if necessary
+const port = process.env.PORT || 8080; // You can change this port if necessary
 
 // Use CORS middleware to allow requests from anywhere
 app.use(cors()); // This will allow all domains to access your API
 
 // API route to get transcript
+
+
+
+
+app.get('/', (req, res) => {
+  return res.json({
+    "message" : "I'm Good"
+  })
+})
+
+
 app.get('/api/getTranscript/:videoId', (req, res) => {
   // Extract videoId from route parameters
   const { videoId } = req.params;
@@ -32,20 +43,23 @@ app.get('/api/getTranscript/:videoId', (req, res) => {
       // Select all span elements with the class 'transcript-segment' inside the <p> element
       $('p.inline.NA.text-primary-content span.transcript-segment').each((index, element) => {
         // Extract data-start, data-duration, and text from each span
-        const start = $(element).attr('data-start');
-        const duration = $(element).attr('data-duration');
+        const start = parseFloat($(element).attr('data-start')); // Convert start to a number
+        const duration = parseFloat($(element).attr('data-duration')); // Convert duration to a number
         const text = $(element).text().trim();
 
         // Push the extracted information into the array as an object
         transcriptData.push({
-          data_start: start,
-          data_duration: duration,
+          duration: duration,
+          start: start,
           text: text
         });
       });
 
-      // Send the extracted data as JSON response
-      res.json(transcriptData);
+      // Send the extracted data as JSON response in the desired format
+      res.json({
+        success: true,
+        transcript: transcriptData
+      });
     })
     .catch((error) => {
       console.error('Error fetching the URL:', error);
