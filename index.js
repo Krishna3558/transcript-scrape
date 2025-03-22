@@ -2,10 +2,11 @@ const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const cors = require('cors'); // Import the cors package
+require('dotenv').config();
 
 // Initialize the Express app
 const app = express();
-const port = 3000; // You can change this port if necessary
+const port = process.env.PORT || 3000; // You can change this port if necessary
 
 // Use CORS middleware to allow requests from anywhere
 app.use(cors()); // This will allow all domains to access your API
